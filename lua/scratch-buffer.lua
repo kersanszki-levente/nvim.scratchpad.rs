@@ -3,7 +3,7 @@ local augroup = vim.api.nvim_create_augroup("nvim.scratchpad.rs", { clear = true
 local M = {
 	temp_dir = "/tmp/nvim.scratchpad.rs",
 
-	buf = ''
+	buf = nil
 }
 
 local function create_buffer()
@@ -77,6 +77,14 @@ local function setup_events()
 	})
 end
 
+local function main()
+	if M.buf ~= nil then
+		vim.api.nvim_win_set_buf(0, M.buf)
+	else
+		create_buffer()
+	end
+end
+
 function M.setup(opts)
 	-- Set defaults
 	opts = opts or {}
@@ -85,7 +93,7 @@ function M.setup(opts)
 	end
 
 	os.execute("mkdir -p " .. M.temp_dir)
-	vim.api.nvim_create_user_command('Scratchpad', create_buffer, {})
+	vim.api.nvim_create_user_command('Scratchpad', main, {})
 
 	setup_events()
 end
