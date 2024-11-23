@@ -78,7 +78,11 @@ local function setup_events()
 end
 
 function M.setup(opts)
+	-- Set defaults
 	opts = opts or {}
+	if opts.temp_dir ~= nil then
+		M.temp_dir = opts.temp_dir
+	end
 
 	os.execute("mkdir -p " .. M.temp_dir)
 	vim.api.nvim_create_user_command('Scratchpad', create_buffer, {})
