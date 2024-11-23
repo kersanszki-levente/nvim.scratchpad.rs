@@ -1,4 +1,4 @@
-local augroup = vim.api.nvim_create_augroup("ScratchBuffer", { clear = true })
+local M = {}
 
 local function create_buffer()
 	local buf = vim.api.nvim_create_buf(true, true)
@@ -7,7 +7,8 @@ local function create_buffer()
 	return buf
 end
 
-local function main()
+function M.setup(opts)
+	opts = opts or {}
 	local buf = create_buffer()
 
 	vim.api.nvim_buf_set_lines(buf, 0, -1, true, { "--This is your scratchpad", "" })
@@ -15,10 +16,4 @@ local function main()
 	vim.api.nvim_win_set_cursor(0, { vim.api.nvim_buf_line_count(buf), 0 })
 end
 
-local function setup()
-	vim.api.nvim_crate_autocmd("VimEnter",
-		{ group = augroup, desc = "Set an empty scratch buffer on load", once = true,
-	callback = main })
-end
-
-return { setup = setup }
+return M

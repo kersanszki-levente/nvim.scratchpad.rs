@@ -10,6 +10,7 @@ Add a new lua file to your `lazy.nvim` plugins directory with these contents:
 return {
     'kersanszki-levente/nvim.scratchpad', # or replace it with a path to a local directory
     name = 'nvim.scratchpad',
+    cmd = 'Scratchpad',
     config = function()
         require('scratch-buffer').setup()
     end
