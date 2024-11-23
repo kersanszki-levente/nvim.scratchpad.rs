@@ -45,6 +45,7 @@ local function run()
 	if runtime_result ~= nil then
 		print(runtime_result)
 	end
+	os.remove(vim.fn.expand "scratch")
 
 	vim.cmd("cd " .. work_dir)
 end
