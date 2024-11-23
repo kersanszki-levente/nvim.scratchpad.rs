@@ -1,6 +1,8 @@
-# nvim.scratchpad
+# nvim.scratchpad.rs (WIP)
 
-This is a simple implementation of a Neovim plugin that creates an empty buffer on load. It was based on Miguel Crespo's [blogpost](https://miguelcrespo.co/posts/how-to-write-a-neovim-plugin-in-lua) and this repository mainly serves as a basis for future inspiration/reminder for myself.
+This is a simple implementation of a Neovim plugin for a Rust scratchpad. Upon invokation of the `Scratchpad` command, the plugin creates the `tmp/nvim.scratchpad.rs` directory and a new temporary-ish buffer. Writing to this buffer invokes rustc, which in turn compiled the contents of the buffer and attempts to run it returning stdout and stderr from both operations.
+
+This plugin was inspired by Miguel Crespo's blogpost on [How to write a Neovim plugin in Lua](https://miguelcrespo.co/posts/how-to-write-a-neovim-plugin-in-lua).
 
 ## Installation (lazy.nvim)
 
