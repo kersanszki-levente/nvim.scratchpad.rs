@@ -16,4 +16,5 @@ return {
     config = function()
         require('scratch-buffer').setup()
     end
+}
 ```
