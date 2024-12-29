@@ -7,7 +7,7 @@ local M = {
 }
 
 local function create_buffer()
-    local work_dir = vim.loop.cwd()
+    local work_dir = vim.api.cwd()
     vim.cmd("cd " .. M.temp_dir)
 
     local buf = vim.api.nvim_create_buf(true, false)
@@ -33,7 +33,7 @@ local function run()
         return
     end
 
-    local work_dir = vim.loop.cwd()
+    local work_dir = vim.api.cwd()
     vim.cmd("cd " .. M.temp_dir)
 
     local comptime_result = vim.fn.system('rustc scratch.rs')
@@ -51,7 +51,7 @@ local function run()
 end
 
 local function cleanup()
-    local work_dir = vim.loop.cwd()
+    local work_dir = vim.api.cwd()
     vim.cmd("cd " .. M.temp_dir)
 
     os.remove(vim.fn.expand "scratch.rs")
