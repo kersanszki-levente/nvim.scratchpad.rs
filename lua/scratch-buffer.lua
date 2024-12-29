@@ -16,7 +16,7 @@ local function create_buffer()
 
     vim.api.nvim_buf_set_lines(buf, 0, -1, true, { "// scratch.rs", "" })
     vim.api.nvim_buf_set_lines(buf, 2, -1, true, { "fn main() {", "" })
-    vim.api.nvim_buf_set_lines(buf, 3, -1, true, { "    println!(\"Hello world!\")", "" })
+    vim.api.nvim_buf_set_lines(buf, 3, -1, true, { "\tprintln!(\"Hello world!\")", "" })
     vim.api.nvim_buf_set_lines(buf, 4, -1, true, { "}", "" })
 
     M.buf = buf
