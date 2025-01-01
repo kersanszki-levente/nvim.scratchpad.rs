@@ -3,15 +3,18 @@ local augroup = vim.api.nvim_create_augroup("nvim.scratchpad.rs", { clear = true
 local M = {
     temp_dir = "/tmp/nvim.scratchpad.rs",
 
-    buf = nil
+    buf = nil,
+
+    buf_name = nil,
 }
 
 local function create_buffer()
-    local work_dir = vim.api.cwd()
+    local work_dir = vim.uv.cwd()
     vim.cmd("cd " .. M.temp_dir)
 
     local buf = vim.api.nvim_create_buf(true, false)
-    vim.api.nvim_buf_set_name(buf, 'scratch.rs')
+    M.buf_name = 'scratch_'..require('os').time()..'.rs'
+    vim.api.nvim_buf_set_name(buf, M.buf_name)
     vim.api.nvim_set_option_value("filetype", "rust", { buf = buf })
 
     vim.api.nvim_buf_set_lines(buf, 0, -1, true, { "// scratch.rs", "" })
@@ -33,10 +36,10 @@ local function run()
         return
     end
 
-    local work_dir = vim.api.cwd()
+    local work_dir = vim.uv.cwd()
     vim.cmd("cd " .. M.temp_dir)
 
-    local comptime_result = vim.fn.system('rustc scratch.rs')
+    local comptime_result = vim.fn.system('rustc -o scratch '..M.buf_name)
     if comptime_result ~= nil then
         print(comptime_result)
     end
@@ -51,10 +54,10 @@ local function run()
 end
 
 local function cleanup()
-    local work_dir = vim.api.cwd()
+    local work_dir = vim.uv.cwd()
     vim.cmd("cd " .. M.temp_dir)
 
-    os.remove(vim.fn.expand "scratch.rs")
+    os.remove(vim.fn.expand(M.buf_name))
     vim.api.nvim_buf_delete(M.buf, { force = true })
 
     vim.cmd("cd " .. work_dir)
