@@ -54,13 +54,20 @@ local function run()
 end
 
 local function cleanup()
-    local work_dir = vim.uv.cwd()
-    vim.cmd("cd " .. M.temp_dir)
+    local user_input = nil
+    while user_input ~= 'Y' and user_input ~= 'n' do
+        user_input = vim.fn.input("Want to keep? [Y/n] ")
+    end
 
-    os.remove(vim.fn.expand(M.buf_name))
-    vim.api.nvim_buf_delete(M.buf, { force = true })
+    if user_input == 'n' then
+        local work_dir = vim.uv.cwd()
+        vim.cmd("cd " .. M.temp_dir)
 
-    vim.cmd("cd " .. work_dir)
+        os.remove(vim.fn.expand(M.buf_name))
+        vim.api.nvim_buf_delete(M.buf, { force = true })
+
+        vim.cmd("cd " .. work_dir)
+    end
 end
 
 local function setup_events()
