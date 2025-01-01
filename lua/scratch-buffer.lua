@@ -10,7 +10,7 @@ local M = {
 
 local function create_buffer()
     local work_dir = vim.uv.cwd()
-    vim.cmd("cd " .. M.temp_dir)
+    vim.api.nvim_set_current_dir(M.temp_dir)
 
     local buf = vim.api.nvim_create_buf(true, false)
     M.buf_name = 'scratch_'..require('os').time()..'.rs'
@@ -23,7 +23,7 @@ local function create_buffer()
     vim.api.nvim_buf_set_lines(buf, 4, -1, true, { "}", "" })
 
     M.buf = buf
-    vim.cmd("cd " .. work_dir)
+    vim.api.nvim_set_current_dir(work_dir)
 
     vim.api.nvim_win_set_buf(0, buf)
     vim.api.nvim_win_set_cursor(0, { vim.api.nvim_buf_line_count(buf) - 1, 0 })
@@ -37,7 +37,7 @@ local function run()
     end
 
     local work_dir = vim.uv.cwd()
-    vim.cmd("cd " .. M.temp_dir)
+    vim.api.nvim_set_current_dir(M.temp_dir)
 
     local comptime_result = vim.fn.system('rustc -o scratch '..M.buf_name)
     if comptime_result ~= nil then
@@ -50,7 +50,7 @@ local function run()
     end
     os.remove(vim.fn.expand "scratch")
 
-    vim.cmd("cd " .. work_dir)
+    vim.api.nvim_set_current_dir(work_dir)
 end
 
 local function cleanup()
@@ -61,12 +61,12 @@ local function cleanup()
 
     if user_input == 'n' then
         local work_dir = vim.uv.cwd()
-        vim.cmd("cd " .. M.temp_dir)
+        vim.api.nvim_set_current_dir(M.temp_dir)
 
         os.remove(vim.fn.expand(M.buf_name))
         vim.api.nvim_buf_delete(M.buf, { force = true })
 
-        vim.cmd("cd " .. work_dir)
+        vim.api.nvim_set_current_dir(work_dir)
     end
 end
 
@@ -102,7 +102,7 @@ function M.setup(opts)
         M.temp_dir = opts.temp_dir
     end
 
-    os.execute("mkdir -p " .. M.temp_dir)
+    vim.fn.mkdir(M.temp_dir, "p")
     vim.api.nvim_create_user_command('Scratchpad', main, {})
 
     setup_events()
