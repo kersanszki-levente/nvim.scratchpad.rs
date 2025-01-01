@@ -11,7 +11,7 @@ Add a new lua file to your `lazy.nvim` plugins directory with these contents:
 ```lua
 return {
     'kersanszki-levente/nvim.scratchpad.rs', -- or replace it with a path to a local directory
-    name = 'nvim.scratchpad',
+    name = 'nvim.scratchpad.rs',
     cmd = 'Scratchpad',
     config = function()
         require('scratch-buffer').setup()
