@@ -18,3 +18,15 @@ return {
     end
 }
 ```
+
+## Development
+
+In case you want to make a tweak to the plugin and test it in an isolated configuration you can just use the `make` command `testenv`:
+
+```bash
+make testenv
+```
+
+## License
+
+The plugin is provided under the [MIT License](/LICENSE).
