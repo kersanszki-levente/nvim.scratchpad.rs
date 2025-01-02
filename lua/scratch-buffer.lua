@@ -87,11 +87,30 @@ local function setup_events()
     })
 end
 
-local function main()
-    if M.buf ~= nil then
-        vim.api.nvim_win_set_buf(0, M.buf)
+local function main(args)
+    if args.args == "" then
+        args.args = nil
+    end
+    local cmd = args.args
+    if cmd == "new" or cmd == nil then
+        if M.buf ~= nil then
+            vim.api.nvim_win_set_buf(0, M.buf)
+        else
+            create_buffer()
+        end
+    elseif cmd == "list" then
+        local globs = vim.fn.glob(M.temp_dir.."/*.rs")
+        if globs ~= "" then
+            local files = vim.split(globs, "\n", {trimepty=true})
+            local selected_file = tonumber(vim.fn.inputlist(files))
+            if selected_file > #files or selected_file < 1 then
+                vim.api.nvim_err_writeln("Invalid item index")
+            else
+                vim.api.nvim_command("e "..files[selected_file])
+            end
+        end
     else
-        create_buffer()
+        vim.api.nvim_err_writeln("Unknown command")
     end
 end
 
@@ -103,7 +122,18 @@ function M.setup(opts)
     end
 
     vim.fn.mkdir(M.temp_dir, "p")
-    vim.api.nvim_create_user_command('Scratchpad', main, {})
+
+    vim.api.nvim_create_user_command(
+        'Scratchpad',
+        main,
+        {
+            nargs = "?",
+            desc = "Create new or load existing scratchpads",
+            complete = function(_, _, _)
+                return { "new", "list" }
+            end,
+        }
+    )
 
     setup_events()
 end
