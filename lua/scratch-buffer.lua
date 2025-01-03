@@ -106,6 +106,7 @@ local function main(args)
             if selected_file > #files or selected_file < 1 then
                 vim.api.nvim_err_writeln("Invalid item index")
             else
+                M.buf_name = string.match(files[selected_file], "scratch_[0-9]+.rs")
                 vim.api.nvim_command("e "..files[selected_file])
             end
         end
