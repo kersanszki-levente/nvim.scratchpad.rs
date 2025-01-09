@@ -1,7 +1,43 @@
 local augroup = vim.api.nvim_create_augroup("nvim.scratchpad.rs", { clear = true })
 
+local function dir_exists(dir)
+    local file = io.open(dir, "r")
+    if (file ~= nil) then
+        io.close(file)
+        return true
+    else
+        return false
+    end
+end
+
+local function guess_os()
+    local path_separator = require("package").config:sub(1,1)
+    if path_separator == "\\" and dir_exists("C:/Windows") then
+        return "windows"
+    elseif path_separator == "/" and dir_exists("/Applications") then
+        return "macos"
+    elseif path_separator == "/" and dir_exists("/home") then
+        return "linux"
+    else
+        return "unknown"
+    end
+end
+
+local function get_default_tmp_dir()
+    local os = guess_os()
+    if os == "linux" or os == "macos" then
+        return "/tmp/nvim.scratchpad.rs"
+    elseif os == "windows" then
+        return "C:/temp/nvim.scratchpad.rs"
+    else
+        vim.api.nvim_err_writeln("Could not determine OS")
+    end
+end
+
 local M = {
-    temp_dir = "/tmp/nvim.scratchpad.rs",
+    os = guess_os(),
+
+    temp_dir = get_default_tmp_dir(),
 
     buf = nil,
 
