@@ -75,16 +75,21 @@ local function run()
     local work_dir = vim.uv.cwd()
     vim.api.nvim_set_current_dir(M.temp_dir)
 
-    local comptime_result = vim.fn.system('rustc -o scratch '..M.buf_name)
-    if comptime_result ~= nil then
-        print(comptime_result)
+    local compilation_output = vim.system(
+        { 'rustc', '-o', 'scratch', M.buf_name },
+        { text = true}
+    ):wait()
+    if compilation_output.stderr ~= nil then
+        print(compilation_output.stderr)
+    else
+        local runtime_result = vim.system({'scratch'}):wait()
+        if runtime_result.stderr ~= nil then
+            print(runtime_result.stderr)
+        else
+            print(runtime_result.stdout)
+        end
+        os.remove(vim.fn.expand "scratch")
     end
-
-    local runtime_result = vim.fn.system('./scratch')
-    if runtime_result ~= nil then
-        print(runtime_result)
-    end
-    os.remove(vim.fn.expand "scratch")
 
     vim.api.nvim_set_current_dir(work_dir)
 end
